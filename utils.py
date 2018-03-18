@@ -5,6 +5,8 @@ from pymongo import MongoClient
 import urllib3
 import certifi
 from bs4 import BeautifulSoup
+import urllib3.contrib.pyopenssl
+urllib3.contrib.pyopenssl.inject_into_urllib3()
 
 ############################  MONGODB INTEGRATION #################################
 
