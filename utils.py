@@ -68,8 +68,11 @@ def get_cover_art(link):
 	    print('Connection failed.')
 	#r = http.request('GET', link)
 	soup = BeautifulSoup(r.data,"html5lib")
-	print(soup)
-	image_url = soup.find_all(property="og:image")[0]['content']
+	images = soup.find_all(property="og:image")
+	if len(images)>=0 :
+		image_url = images[0]['content']
+	else :
+		print("scraping failed")
 	
 	return image_url
 
