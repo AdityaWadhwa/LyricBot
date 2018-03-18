@@ -3,6 +3,7 @@ import json
 import requests
 from pymongo import MongoClient
 import urllib3
+import certifi
 from bs4 import BeautifulSoup
 
 ############################  MONGODB INTEGRATION #################################
@@ -12,7 +13,7 @@ MONGODB_URI = "mongodb://test:test@ds233748.mlab.com:33748/adi_lyric_bot"
 client = MongoClient(MONGODB_URI)
 db = client.get_database("adi_lyric_bot")
 lyric_records = db.lyric_records
-#http = urllib3.PoolManager()
+http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
 urllib3.disable_warnings()
 
 def getRECORDS(user_id):
@@ -59,7 +60,7 @@ lyric_params = {
 
 def get_cover_art(link):
 
-	r = urllib3.PoolManager().request('GET', link)
+	r = http.request('GET', link)
 	soup = BeautifulSoup(r.data,"html5lib")
 	image_url = soup.find_all(property="og:image")[0]['content']
 	
