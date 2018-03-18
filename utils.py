@@ -14,7 +14,7 @@ client = MongoClient(MONGODB_URI)
 db = client.get_database("adi_lyric_bot")
 lyric_records = db.lyric_records
 http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
-urllib3.disable_warnings()
+#urllib3.disable_warnings()
 
 def getRECORDS(user_id):
 	"""
