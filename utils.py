@@ -2,6 +2,8 @@ import apiai
 import json
 import requests
 from pymongo import MongoClient
+import urllib3
+from bs4 import BeautifulSoup
 
 ############################  MONGODB INTEGRATION #################################
 
@@ -10,6 +12,8 @@ MONGODB_URI = "mongodb://test:test@ds233748.mlab.com:33748/adi_lyric_bot"
 client = MongoClient(MONGODB_URI)
 db = client.get_database("adi_lyric_bot")
 lyric_records = db.lyric_records
+#http = urllib3.PoolManager()
+urllib3.disable_warnings()
 
 def getRECORDS(user_id):
 	"""
@@ -53,6 +57,14 @@ lyric_params = {
     	"track_id":0
 		}
 
+def get_cover_art(link):
+
+	r = urllib3.PoolManager().request('GET', link)
+	soup = BeautifulSoup(r.data,"html5lib")
+	image_url = soup.find(property="og:image")['content']
+	
+	return image_url
+
 
 def get_lyrics(params):
 	"""
@@ -73,7 +85,7 @@ def get_lyrics(params):
 		song = {}
 		song['title'] = song_list[i]['track']['track_name']
 		song['link'] = song_list[i]['track']['track_share_url']
-		song['img'] = song_list[i]['track']['album_coverart_100x100']
+		song['img'] = get_cover_art(song['link'])
 		songs.append(song)
 		
 	return songs

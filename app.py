@@ -18,12 +18,15 @@ def verify():
 		if not request.args.get("hub.verify_token") == VERIFICATION_TOKEN:
 			return "Verification token mismatch", 403
 		return request.args["hub.challenge"], 200
+	set_persistent_menu()
+	set_greeting_text()
+	set_get_started()
 	return "Hello world", 200
 
 
 @app.route('/', methods=['POST'])
 def webhook():
-	print(request.data)
+	
 	data = request.get_json()
 
 	if data['object'] == "page":
@@ -37,6 +40,8 @@ def webhook():
 				sender_id = messaging_event['sender']['id']
 				recipient_id = messaging_event['recipient']['id']
 
+				bot.send_action(sender_id, "mark_seen")
+
 				if messaging_event.get('message'):
 					# HANDLE NORMAL MESSAGES HERE
 
@@ -45,7 +50,8 @@ def webhook():
 
 						query = messaging_event['message']['text']
 
-						
+						bot.send_action(sender_id, "typing_on")
+
 						reply = fetch_reply(query, sender_id)
 				
 						if reply['type'] == 'lyrics':
@@ -60,12 +66,13 @@ def webhook():
 						
 				elif messaging_event.get('postback'):
 					# HANDLE POSTBACKS HERE
+					
 					payload = messaging_event['postback']['payload']
 					if payload ==  'SHOW_HELP':
 						bot.send_text_message(sender_id, HELP_MSG)	
+				bot.send_action(sender_id, "typing_off")
 
-
-	return "ok", 200
+	return "Success", 200
 
 
 def set_greeting_text():
@@ -81,7 +88,6 @@ def set_greeting_text():
 	ENDPOINT = "https://graph.facebook.com/v2.8/me/thread_settings?access_token=%s"%(FB_ACCESS_TOKEN)
 	r = requests.post(ENDPOINT, headers = headers, data = json.dumps(data))
 	print(r.content)
-
 
 def set_persistent_menu():
 	headers = {
@@ -106,9 +112,20 @@ def set_persistent_menu():
 	r = requests.post(ENDPOINT, headers = headers, data = json.dumps(data))
 	print(r.content)
 
-
-# set_persistent_menu()
-# set_greeting_text()
+def set_get_started():
+	headers = {
+		'Content-Type':'application/json'
+		}
+	data = {
+		"setting_type":"call_to_actions",
+		"thread_state":"new_thread",
+		"call_to_actions":[{
+    		"payload":"SHOW_HELP"
+  			}]
+  		}
+	ENDPOINT = "https://graph.facebook.com/v2.8/me/thread_settings?access_token=%s"%(FB_ACCESS_TOKEN)
+	r = requests.post(ENDPOINT, headers = headers, data = json.dumps(data))
+	print(r.content)
 
 if __name__ == "__main__":
 	app.run(port=8000, use_reloader = True)
