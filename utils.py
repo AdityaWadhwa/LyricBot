@@ -62,8 +62,13 @@ lyric_params = {
 
 def get_cover_art(link):
 
-	r = http.request('GET', link)
+	try:
+	    r = http.request('GET', link, retries=False)
+	except urllib3.exceptions.NewConnectionError:
+	    print('Connection failed.')
+	#r = http.request('GET', link)
 	soup = BeautifulSoup(r.data,"html5lib")
+	print(soup)
 	image_url = soup.find_all(property="og:image")[0]['content']
 	
 	return image_url
