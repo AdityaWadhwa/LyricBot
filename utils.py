@@ -73,7 +73,7 @@ def get_cover_art(link):
 	try:
 		image_url = images[0]['content']
 	except IndexError:
-		image_url = 'null'
+		image_url = "http://s.mxmcdn.net//images-storage//albums//nocover.png"
 		print("index error occured")
 
 	return image_url
