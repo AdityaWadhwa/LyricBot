@@ -74,6 +74,7 @@ def get_cover_art(link):
 		image_url = images[0]['content']
 	except IndexError:
 		image_url = 'null'
+		print("index error occured")
 
 	return image_url
 
