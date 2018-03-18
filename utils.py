@@ -61,7 +61,7 @@ def get_cover_art(link):
 
 	r = urllib3.PoolManager().request('GET', link)
 	soup = BeautifulSoup(r.data,"html5lib")
-	image_url = soup.find(property="og:image")['content']
+	image_url = soup.find_all(property="og:image")[0]['content']
 	
 	return image_url
 
