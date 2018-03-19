@@ -7,6 +7,7 @@ import certifi
 from bs4 import BeautifulSoup
 import urllib3.contrib.pyopenssl
 from urllib.parse import urlparse
+from urllib.parse import urlencode
 urllib3.contrib.pyopenssl.inject_into_urllib3()
 
 ############################  MONGODB INTEGRATION #################################
