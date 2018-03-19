@@ -69,6 +69,7 @@ def get_cover_art(link):
 	#r = http.request('GET', link)
 	soup = BeautifulSoup(r.data,"html5lib")
 	images = soup.find_all(property="og:image")
+	print(r.status)
 	
 	try:
 		image_url = images[0]['content']
@@ -94,7 +95,7 @@ def get_lyrics(params):
 	r = requests.get(url=url_search,params=search_params)
 	data = r.json()
 	song_list = data['message']['body']['track_list']
-	for i in range(len(song_list)):
+	for i in range(3):
 		song = {}
 		song['title'] = song_list[i]['track']['track_name']
 		song['link'] = song_list[i]['track']['track_share_url']
