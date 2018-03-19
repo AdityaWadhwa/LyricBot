@@ -6,6 +6,7 @@ import urllib3
 import certifi
 from bs4 import BeautifulSoup
 import urllib3.contrib.pyopenssl
+from urllib.parse import urlparse
 urllib3.contrib.pyopenssl.inject_into_urllib3()
 
 ############################  MONGODB INTEGRATION #################################
@@ -62,8 +63,10 @@ lyric_params = {
 
 def get_cover_art(link):
 
+	o = urlparse(link)
+
 	try:
-		r = http.request('GET', link, retries=False)
+		r = http.request('GET', o.path, retries=False)
 	except urllib3.exceptions.NewConnectionError:
 	    print('Connection failed.')
 	#r = http.request('GET', link)
