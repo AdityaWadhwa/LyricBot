@@ -66,7 +66,7 @@ def get_cover_art(link):
 	o = urlparse(link)
 
 	try:
-		r = http.request('GET', o.path, retries=False)
+		r = http.request('GET', "http://"+o.path+"/", retries=False)
 	except urllib3.exceptions.NewConnectionError:
 	    print('Connection failed.')
 	#r = http.request('GET', link)
