@@ -69,7 +69,7 @@ def get_cover_art(link):
 	url="https://"+o.netloc+o.path+"?"+encoded_args
 	print(url)
 	try:
-		r = http.request('GET', url, retries=False)
+		r = http.request('GET', url)
 	except urllib3.exceptions.NewConnectionError:
 	    print('Connection failed.')
 	#r = http.request('GET', link)
