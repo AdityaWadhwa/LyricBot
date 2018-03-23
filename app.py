@@ -71,7 +71,7 @@ def webhook():
 					if payload ==  'SHOW_HELP':
 						bot.send_text_message(sender_id, HELP_MSG)	
 				bot.send_action(sender_id, "typing_off")
-
+	print(reply['data'])
 	return "Success", 200
 
 
@@ -128,4 +128,4 @@ def set_get_started():
 	print(r.content)
 
 if __name__ == "__main__":
-	app.run(port=8000, use_reloader = True)
+	app.run(port=8000)
