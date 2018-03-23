@@ -66,9 +66,10 @@ def get_cover_art(link):
 
 	o = urlparse(link)
 	encoded_args = urlencode({"apikey":"ee092e7cec4ecd85b5e69f6fa8888c54"})
-
+	url="https://"+o.netloc+o.path+"?"+encoded_args
+	print(url)
 	try:
-		r = http.request('GET', "https://"+o.netloc+o.path+"?"+encoded_args, retries=False)
+		r = http.request('GET', url, retries=False)
 	except urllib3.exceptions.NewConnectionError:
 	    print('Connection failed.')
 	#r = http.request('GET', link)
