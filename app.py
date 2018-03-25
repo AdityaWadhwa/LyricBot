@@ -2,20 +2,17 @@ from flask import Flask, request
 from pymessenger import Bot
 from utils import fetch_reply, quick_response, HELP_MSG
 import requests,json
+from credentials import creds
 
 app = Flask("My lyric bot")
 
-VERIFICATION_TOKEN = "hello"
-
-
-FB_ACCESS_TOKEN = "EAAMOWZAcleDIBAOY7lQajyt9Tze4S0K3Rh5879kAQ0MfsKk7Vg2N3q3sxJUjdXKZAZCZARnXZAm8q5VgB85O9VUdBMY2Lov38ZAFupf3GOjImcm47SHfMr4DWQWe2lbz4kfB0nhFD3v0RjQvDev6Y6szHelW89NiM98xvfR6pGadSUn5rPx2DW"
-bot = Bot(FB_ACCESS_TOKEN)
+bot = Bot(creds['FB_ACCESS_TOKEN'])
 
 
 @app.route('/', methods=['GET'])
 def verify():
 	if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
-		if not request.args.get("hub.verify_token") == VERIFICATION_TOKEN:
+		if not request.args.get("hub.verify_token") == creds['VERIFICATION_TOKEN']:
 			return "Verification token mismatch", 403
 		return request.args["hub.challenge"], 200
 	set_persistent_menu()
@@ -71,7 +68,6 @@ def webhook():
 					if payload ==  'SHOW_HELP':
 						bot.send_text_message(sender_id, HELP_MSG)	
 				bot.send_action(sender_id, "typing_off")
-	print(reply['data'])
 	return "Success", 200
 
 
@@ -85,7 +81,7 @@ def set_greeting_text():
 			"text":"Hi {{user_first_name}}! I am lyric bot"
 			}
 		}
-	ENDPOINT = "https://graph.facebook.com/v2.8/me/thread_settings?access_token=%s"%(FB_ACCESS_TOKEN)
+	ENDPOINT = "https://graph.facebook.com/v2.8/me/thread_settings?access_token=%s"%(creds['FB_ACCESS_TOKEN'])
 	r = requests.post(ENDPOINT, headers = headers, data = json.dumps(data))
 	print(r.content)
 
@@ -108,7 +104,7 @@ def set_persistent_menu():
 				"payload":"SHOW_HELP"
 			}]
 		}
-	ENDPOINT = "https://graph.facebook.com/v2.8/me/thread_settings?access_token=%s"%(FB_ACCESS_TOKEN)
+	ENDPOINT = "https://graph.facebook.com/v2.8/me/thread_settings?access_token=%s"%(creds['FB_ACCESS_TOKEN'])
 	r = requests.post(ENDPOINT, headers = headers, data = json.dumps(data))
 	print(r.content)
 
@@ -123,7 +119,7 @@ def set_get_started():
     		"payload":"SHOW_HELP"
   			}]
   		}
-	ENDPOINT = "https://graph.facebook.com/v2.8/me/thread_settings?access_token=%s"%(FB_ACCESS_TOKEN)
+	ENDPOINT = "https://graph.facebook.com/v2.8/me/thread_settings?access_token=%s"%(creds['FB_ACCESS_TOKEN'])
 	r = requests.post(ENDPOINT, headers = headers, data = json.dumps(data))
 	print(r.content)
 

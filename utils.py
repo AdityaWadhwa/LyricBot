@@ -8,14 +8,14 @@ from bs4 import BeautifulSoup
 import urllib3.contrib.pyopenssl
 from urllib.parse import urlparse
 from urllib.parse import urlencode
+from credentials import creds
 urllib3.contrib.pyopenssl.inject_into_urllib3()
 
 ############################  MONGODB INTEGRATION #################################
 
 # mongoDB client
-MONGODB_URI = "mongodb://test:test@ds233748.mlab.com:33748/adi_lyric_bot"
-client = MongoClient(MONGODB_URI)
-db = client.get_database("adi_lyric_bot")
+client = MongoClient(creds['MONGODB_URI'])
+db = client.get_database(creds['MONGODB_DB'])
 lyric_records = db.lyric_records
 http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
 #urllib3.disable_warnings()
@@ -35,10 +35,7 @@ def pushRECORD(record):
 ####################################################################################
 
 # api.ai client 
-APIAI_ACCESS_TOKEN = "3c0591fc7f3c471f87253773ef1b8065"
-ai = apiai.ApiAI(APIAI_ACCESS_TOKEN)
-
-
+ai = apiai.ApiAI(creds['APIAI_ACCESS_TOKEN'])
 
 # a help message
 HELP_MSG = """
@@ -49,7 +46,7 @@ try : Show me lyrics of despacito
 
 url_search = "http://api.musixmatch.com/ws/1.1/track.search"
 search_params = {
-    	"apikey":"ee092e7cec4ecd85b5e69f6fa8888c54",
+    	"apikey":creds['MUSIX_API_KEY'],
     	"q_artist":"",
     	"q_track":"",
     	"page_size":10,
@@ -58,14 +55,14 @@ search_params = {
 		}
 url_lyric = "http://api.musixmatch.com/ws/1.1/track.lyrics.get"
 lyric_params = {
-    	"apikey":"ee092e7cec4ecd85b5e69f6fa8888c54",
+    	"apikey":creds['MUSIX_API_KEY'],
     	"track_id":0
 		}
 
 def get_cover_art(link):
 
 	o = urlparse(link)
-	encoded_args = urlencode({"apikey":"ee092e7cec4ecd85b5e69f6fa8888c54"})
+	encoded_args = urlencode({"apikey":creds['MUSIX_API_KEY']})
 	url="https://"+o.netloc+o.path+"?"+encoded_args
 	print(url)
 	try:
